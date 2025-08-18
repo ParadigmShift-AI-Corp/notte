@@ -166,6 +166,7 @@ class NotteConfigDict(TypedDict, total=False):
 
     # [llm]
     reasoning_model: str
+    validator_model: str | None
     max_history_tokens: int | None
     nb_retries_structured_output: int
     nb_retries: int
@@ -269,6 +270,7 @@ class NotteConfig(TomlConfig):
 
     # [llm]
     reasoning_model: str = LlmModel.default().value
+    validator_model: str | None = None
     max_history_tokens: int | None = None
     nb_retries_structured_output: int
     nb_retries: int
