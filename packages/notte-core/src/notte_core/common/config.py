@@ -211,6 +211,7 @@ class NotteConfigDict(TypedDict, total=False):
     # [agent]
     max_steps: int
     use_vision: bool
+    use_tool_calling: bool
 
     # [dom_parsing]
     highlight_elements: bool
@@ -315,6 +316,7 @@ class NotteConfig(TomlConfig):
     # [agent]
     max_steps: int
     use_vision: bool
+    use_tool_calling: bool = False
 
     # [dom_parsing]
     highlight_elements: bool
