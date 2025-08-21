@@ -1,3 +1,4 @@
+import requests
 from loguru import logger
 from notte_core.actions import (
     BaseAction,
@@ -300,11 +301,20 @@ class BrowserController:
                 if self.storage is None or self.storage.download_dir is None:
                     raise NoStorageObjectProvidedError(action.name())
 
-                async with window.page.expect_download() as dw:
-                    await locator.click()
-                download = await dw.value
-                file_path = f"{self.storage.download_dir}{download.suggested_filename}"
-                await download.save_as(file_path)
+                headers = requests.head(window.page.url).headers
+                if headers["content-type"] != "text/html" and "filename" in headers:
+                    resp = requests.get(window.page.url)
+                    file_path = f"{self.storage.download_dir}{headers['filename']}"
+
+                    with open(file_path, "wb") as f:
+                        _ = f.write(resp.content)
+                else:
+                    async with window.page.expect_download() as dw:
+                        await locator.click()
+                    download = await dw.value
+                    file_path = f"{self.storage.download_dir}{download.suggested_filename}"
+                    await download.save_as(file_path)
+
                 res = self.storage.set_file(file_path)
 
                 if not res:
