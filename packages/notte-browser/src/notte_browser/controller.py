@@ -1,4 +1,3 @@
-import requests
 from loguru import logger
 from notte_core.actions import (
     BaseAction,
@@ -38,6 +37,7 @@ from notte_core.profiling import profiler
 from notte_core.storage import BaseStorage
 from notte_core.utils.code import text_contains_tabs
 from notte_core.utils.platform import platform_control_key
+from notte_core.utils.raw_file import get_filename, save_file
 from typing_extensions import final
 
 from notte_browser.captcha import CaptchaHandler
@@ -151,6 +151,7 @@ class BrowserController:
             press_enter = action.press_enter
         # locate element (possibly in iframe)
         locator: Locator = await locate_element(window.page, action.selector)
+
         original_url = window.page.url
 
         action_timeout = config.timeout_action_ms
@@ -301,13 +302,13 @@ class BrowserController:
                 if self.storage is None or self.storage.download_dir is None:
                     raise NoStorageObjectProvidedError(action.name())
 
-                headers = requests.head(window.page.url).headers
-                if headers["content-type"] != "text/html" and "filename" in headers:
-                    resp = requests.get(window.page.url)
-                    file_path = f"{self.storage.download_dir}{headers['filename']}"
+                if window.is_file and window.goto_response:
+                    headers = window.goto_response.headers
+                    filename = get_filename(headers, window.page.url)
+                    logger.info(f"Saving file with this filename: {filename}")
 
-                    with open(file_path, "wb") as f:
-                        _ = f.write(resp.content)
+                    file_path = f"{self.storage.download_dir}{filename}"
+                    save_file(window.page.url, file_path)
                 else:
                     async with window.page.expect_download() as dw:
                         await locator.click()
