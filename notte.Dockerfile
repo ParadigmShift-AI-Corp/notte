@@ -1,6 +1,6 @@
 ARG PYTHON_VERSION=3.11
 # build stage
-FROM python:${PYTHON_VERSION}-slim as build
+FROM python:${PYTHON_VERSION}-slim AS build
 
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 
@@ -19,9 +19,9 @@ FROM python:${PYTHON_VERSION}-slim
 
 WORKDIR /app
 
-COPY --from=build /app/dist/notte-0.0.1-py3-none-any.whl .
+COPY --from=build /app/dist/ ./dist/
 
-RUN pip install notte-0.0.1-py3-none-any.whl
+RUN pip install dist/*.whl
 
 # Setup entrypoint if needed, for now we just have the package installed
 CMD [ "bash" ]
