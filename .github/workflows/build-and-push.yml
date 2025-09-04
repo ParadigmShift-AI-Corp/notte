@@ -15,6 +15,7 @@ jobs:
   build-and-push:
     name: Build and Push
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -49,6 +50,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NOTTE_VERSION=0.0.2
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Trigger agent-hub rebuild
         if: success()
