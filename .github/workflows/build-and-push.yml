@@ -56,7 +56,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.AGENT_HUB_DISPATCH_TOKEN }}
-          repository: YOUR_ORG/agent-hub
+          repository: ParadigmShift-AI-Corp/agent-hub
           event-type: notte-image-updated
           client-payload: |
             {
