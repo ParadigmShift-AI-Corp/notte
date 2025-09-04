@@ -3,7 +3,7 @@ ARG PYTHON_VERSION=3.11
 # build stage
 FROM python:${PYTHON_VERSION}-slim AS build
 
-ARG NOTTE_VERSION=dev
+ARG NOTTE_VERSION=0.0.2
 
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 

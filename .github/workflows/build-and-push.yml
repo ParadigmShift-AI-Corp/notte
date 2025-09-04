@@ -48,7 +48,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NOTTE_VERSION=${{ github.sha }}
+            NOTTE_VERSION=0.0.2
 
       - name: Trigger agent-hub rebuild
         if: success()
