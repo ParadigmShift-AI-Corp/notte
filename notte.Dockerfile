@@ -1,4 +1,6 @@
 ARG PYTHON_VERSION=3.11
+ARG NOTTE_VERSION=dev
+
 # build stage
 FROM python:${PYTHON_VERSION}-slim AS build
 
@@ -12,16 +14,16 @@ COPY . .
 
 RUN uv sync --dev --all-extras
 
-RUN bash build.sh 0.0.1
+RUN bash build.sh ${NOTTE_VERSION}
 
 # final stage
-FROM python:${PYTHON_VERSION}-slim
+FROM us-central1-docker.pkg.dev/evaluation-deployment/agents/neurosim-base:latest
 
 WORKDIR /app
 
 COPY --from=build /app/dist/ ./dist/
 
-RUN pip install dist/*.whl
+RUN uv pip install --system dist/*.whl
 
 # Setup entrypoint if needed, for now we just have the package installed
 CMD [ "bash" ]

@@ -46,4 +46,21 @@ jobs:
           file: ./notte.Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }} 
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NOTTE_VERSION=${{ github.sha }}
+
+      - name: Trigger agent-hub rebuild
+        if: success()
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.AGENT_HUB_DISPATCH_TOKEN }}
+          repository: YOUR_ORG/agent-hub
+          event-type: notte-image-updated
+          client-payload: |
+            {
+              "notte_image_tag": "${{ github.sha }}",
+              "notte_image_full": "${{ steps.meta.outputs.tags }}",
+              "source_commit": "${{ github.sha }}",
+              "source_ref": "${{ github.ref_name }}"
+            } 
