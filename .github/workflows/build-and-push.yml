@@ -50,8 +50,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NOTTE_VERSION=0.0.2
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Trigger agent-hub rebuild
         if: success()
