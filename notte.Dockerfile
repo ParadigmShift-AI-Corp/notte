@@ -1,8 +1,9 @@
 ARG PYTHON_VERSION=3.11
-ARG NOTTE_VERSION=dev
 
 # build stage
 FROM python:${PYTHON_VERSION}-slim AS build
+
+ARG NOTTE_VERSION=dev
 
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 
@@ -14,7 +15,7 @@ COPY . .
 
 RUN uv sync --dev --all-extras
 
-RUN bash build.sh ${NOTTE_VERSION}
+RUN bash build.sh "${NOTTE_VERSION}"
 
 # final stage
 FROM us-central1-docker.pkg.dev/evaluation-deployment/agents/neurosim-base:latest
