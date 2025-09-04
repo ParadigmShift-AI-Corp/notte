@@ -60,8 +60,8 @@ jobs:
           event-type: notte-image-updated
           client-payload: |
             {
-              "notte_image_tag": "sha-${{ github.sha }}",
+              "notte_image_tag": "${{ steps.meta.outputs.version }}",
               "notte_image_full": "${{ steps.meta.outputs.tags }}",
               "source_commit": "${{ github.sha }}",
               "source_ref": "${{ github.ref_name }}"
-            } 
+            }
