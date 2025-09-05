@@ -79,7 +79,7 @@ jobs:
             echo "pipeline_id=75" >> $GITHUB_OUTPUT
             echo "user_id=test-user-123" >> $GITHUB_OUTPUT
             echo "model=gemini-2.5-flash" >> $GITHUB_OUTPUT
-            echo "advanced_settings={\"use_vision\":true,\"temperature\":0,\"max_steps\":50,\"max_actions_per_step\":50,\"max_failures\":3,\"retry_delay\":10,\"generate_gif\":false,\"episodes\":2}" >> $GITHUB_OUTPUT
+            echo "advanced_settings=$(echo '{"use_vision":true,"temperature":0,"max_steps":50,"max_actions_per_step":50,"max_failures":3,"retry_delay":10,"generate_gif":false,"episodes":2}' | base64 -w 0)" >> $GITHUB_OUTPUT
           else
             echo "pipeline_id=${{ github.event.inputs.pipeline_id }}" >> $GITHUB_OUTPUT
             echo "user_id=${{ github.event.inputs.user_id }}" >> $GITHUB_OUTPUT
