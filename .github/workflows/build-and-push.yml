@@ -57,7 +57,6 @@ jobs:
         with:
           images: ${{ env.GAR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPOSITORY }}/${{ github.ref_name }}
           tags: |
-            type=ref,event=branch
             type=sha
 
       - name: Build and push
