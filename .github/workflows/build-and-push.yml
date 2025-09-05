@@ -102,5 +102,5 @@ jobs:
               "pipeline_id": "${{ steps.pipeline-vars.outputs.pipeline_id }}",
               "user_id": "${{ steps.pipeline-vars.outputs.user_id }}",
               "model": "${{ steps.pipeline-vars.outputs.model }}",
-              "advanced_settings": "${{ steps.pipeline-vars.outputs.advanced_settings }}"
+              "advanced_settings": ${{ toJSON(steps.pipeline-vars.outputs.advanced_settings) }}
             }
