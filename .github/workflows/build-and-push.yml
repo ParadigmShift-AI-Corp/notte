@@ -4,6 +4,24 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      pipeline_id:
+        description: 'Pipeline ID'
+        required: true
+        default: 'default-pipeline'
+      user_id:
+        description: 'User ID'
+        required: true
+        default: 'default-user'
+      model:
+        description: 'Model'
+        required: true
+        default: 'notte-base'
+      advanced_settings:
+        description: 'Advanced Settings (JSON)'
+        required: false
+        default: '{}'
 
 env:
   PROJECT_ID: evaluation-deployment
@@ -38,7 +56,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.GAR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPOSITORY }}/${{ github.ref_name }}
-          tags: type=sha
+          tags: |
+            type=ref,event=branch
+            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -50,6 +70,22 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NOTTE_VERSION=0.0.2
+
+      - name: Set pipeline variables
+        id: pipeline-vars
+        run: |
+          # Set defaults for push events
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "pipeline_id=75" >> $GITHUB_OUTPUT
+            echo "user_id=test-user-123" >> $GITHUB_OUTPUT
+            echo "model=gemini-2.5-flash" >> $GITHUB_OUTPUT
+            echo 'advanced_settings={"use_vision":true,"temperature":0,"max_steps":50,"max_actions_per_step":50,"max_failures":3,"retry_delay":10,"generate_gif":false,"episodes":2}' >> $GITHUB_OUTPUT
+          else
+            echo "pipeline_id=${{ github.event.inputs.pipeline_id }}" >> $GITHUB_OUTPUT
+            echo "user_id=${{ github.event.inputs.user_id }}" >> $GITHUB_OUTPUT
+            echo "model=${{ github.event.inputs.model }}" >> $GITHUB_OUTPUT
+            echo "advanced_settings=${{ github.event.inputs.advanced_settings }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Trigger agent-hub rebuild
         if: success()
@@ -63,5 +99,9 @@ jobs:
               "notte_image_tag": "${{ steps.meta.outputs.version }}",
               "notte_image_full": "${{ steps.meta.outputs.tags }}",
               "source_commit": "${{ github.sha }}",
-              "source_ref": "${{ github.ref_name }}"
+              "source_ref": "${{ github.ref_name }}",
+              "pipeline_id": "${{ steps.pipeline-vars.outputs.pipeline_id }}",
+              "user_id": "${{ steps.pipeline-vars.outputs.user_id }}",
+              "model": "${{ steps.pipeline-vars.outputs.model }}",
+              "advanced_settings": "${{ steps.pipeline-vars.outputs.advanced_settings }}"
             }
