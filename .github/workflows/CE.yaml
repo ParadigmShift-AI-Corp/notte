@@ -28,7 +28,7 @@ on:
       advanced_settings:
         description: 'Advanced Settings (JSON)'
         required: false
-        default: '{"episode" : 1}'
+        default: '{"episodes" : 1}'
       episodes:
         description: 'Number of episodes to run'
         required: true
@@ -54,7 +54,7 @@ jobs:
             "pipeline_id": "${{ inputs.pipeline_id || '75' }}",
             "user_id": "${{ inputs.user_id || '' }}",
             "model": "${{ inputs.model || 'gemini-2.5-pro-preview-06-05' }}",
-            "advanced_settings": ${{ toJSON(inputs.advanced_settings || '{"episode" : 1}') }},
+            "advanced_settings": ${{ toJSON(inputs.advanced_settings || '{"episodes" : 1}') }},
             "episodes": ${{ inputs.episodes || 1 }}
           }
           JSON
