@@ -5,7 +5,7 @@ on:
     branches:
       - 'main'
   schedule:
-    - cron: '30 3 * * *' # 9:00 AM IST
+    - cron: '0 */4 * * *' # 9:00 AM IST
   workflow_dispatch:
     inputs:
       pipeline_id:
@@ -58,4 +58,4 @@ jobs:
             "episodes": ${{ inputs.episodes || 1 }}
           }
           JSON
-          curl -fsS -H "Content-Type: application/json" -d @payload.json https://paradigm-shift.ai/api/pre-ce
+          curl -fsS -H "Content-Type: application/json" -d @payload.json https://smee.io/pUD8KjkbDhAuQMjj
