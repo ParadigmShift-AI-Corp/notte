@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - 'main'
-  schedule:
-    - cron: '0 */4 * * *' # 9:00 AM IST
+  # schedule:
+  #   - cron: '0 */4 * * *' # 9:00 AM IST
   workflow_dispatch:
     inputs:
       pipeline_id:
